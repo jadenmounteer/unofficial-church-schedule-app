@@ -70,6 +70,46 @@ body {
   background: linear-gradient(135deg, #87ceeb 0%, #98d8e8 50%, #b0e0e6 100%);
 }
 
+/* Loading Spinner for Schedule Overlay */
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top: 3px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem auto;
+}
+
+.loading-text {
+  color: white;
+  font-family: "Crimson Text", serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0;
+  text-align: center;
+}
+
+.loading-text-large {
+  color: white;
+  font-family: "Crimson Text", serif;
+  font-size: 3.5rem;
+  font-weight: 600;
+  margin: 0;
+  text-align: center;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  letter-spacing: 0.05em;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 .church-canvas {
   width: 100% !important;
   height: 100% !important;
@@ -384,6 +424,10 @@ body {
     font-size: 2.2rem;
   }
 
+  .loading-text-large {
+    font-size: 2.8rem;
+  }
+
   .welcome-subtitle {
     font-size: 1rem;
   }
@@ -434,6 +478,10 @@ body {
 
   .welcome-text {
     font-size: 1.8rem;
+  }
+
+  .loading-text-large {
+    font-size: 2.2rem;
   }
 
   .scene-overlay-3d {

@@ -1,9 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import ChurchScene from "./ChurchScene";
 
 function App(): React.JSX.Element {
   const [sceneClicked, setSceneClicked] = useState<boolean>(false);
+
+  // Set document title on load to prevent any loading text
+  useEffect(() => {
+    document.title = "The Unofficial Sunday Schedule App";
+  }, []);
 
   const handleSceneClick = (): void => {
     setSceneClicked((prev) => !prev);

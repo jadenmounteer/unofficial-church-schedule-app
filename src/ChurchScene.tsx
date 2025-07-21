@@ -27,9 +27,19 @@ interface ChurchSceneProps {
 // Component to load and display the church landscape
 function ChurchLandscape({
   isClicked,
-}: ChurchLandscapeProps): React.JSX.Element {
+  onModelLoaded,
+}: ChurchLandscapeProps & { onModelLoaded: () => void }): React.JSX.Element {
   const { scene } = useGLTF("/assets/landscape.glb");
   const meshRef = useRef<Group>(null);
+  const [hasNotifiedLoaded, setHasNotifiedLoaded] = useState(false);
+
+  // Notify parent when model is loaded
+  useEffect(() => {
+    if (scene && !hasNotifiedLoaded) {
+      setHasNotifiedLoaded(true);
+      onModelLoaded();
+    }
+  }, [scene, onModelLoaded, hasNotifiedLoaded]);
 
   // Gentle rotation animation - continues even when overlay is expanded
   useFrame((state) => {
@@ -83,9 +93,9 @@ function ChurchScene({
   onSceneClick,
   isClicked,
 }: ChurchSceneProps): React.JSX.Element {
-  const [scheduleData, setScheduleData] = useState<SundaySchedule | null>(null);
   const [selectedStartTime, setSelectedStartTime] =
     useState<StartTime>("9:00 AM");
+  const [is3DModelLoaded, setIs3DModelLoaded] = useState<boolean>(false);
 
   // Load saved start time from localStorage on mount
   useEffect(() => {
@@ -98,11 +108,13 @@ function ChurchScene({
     }
   }, []);
 
-  // Update schedule when start time changes
-  useEffect(() => {
-    const schedule = getSundaySchedule(null, selectedStartTime);
-    setScheduleData(schedule);
-  }, [selectedStartTime]);
+  // Get schedule data synchronously - this is fast and doesn't need loading state
+  const scheduleData = getSundaySchedule(null, selectedStartTime);
+
+  // Handle model loaded callback
+  const handleModelLoaded = (): void => {
+    setIs3DModelLoaded(true);
+  };
 
   // Save start time to localStorage when it changes
   const handleTimeChange = (newTime: StartTime): void => {
@@ -122,10 +134,6 @@ function ChurchScene({
     event.stopPropagation();
     onSceneClick();
   };
-
-  if (!scheduleData) {
-    return <div>Loading schedule...</div>;
-  }
 
   return (
     <div className="church-scene-container">
@@ -162,7 +170,10 @@ function ChurchScene({
 
         {/* The 3D Scene */}
         <Suspense fallback={null}>
-          <ChurchLandscape isClicked={isClicked} />
+          <ChurchLandscape
+            isClicked={isClicked}
+            onModelLoaded={handleModelLoaded}
+          />
         </Suspense>
       </Canvas>
 
@@ -170,25 +181,32 @@ function ChurchScene({
       <div
         className={`scene-overlay-3d ${isClicked ? "expanded" : ""}`}
         onClick={handleOverlayClick}
-        style={{ cursor: !isClicked ? "pointer" : "default" }}
+        style={{
+          cursor: !isClicked ? "pointer" : "default",
+        }}
       >
         {!isClicked ? (
-          // Default state - invitation to click
-          <>
-            <h2 className="welcome-text">This Week's Schedule</h2>
+          !is3DModelLoaded ? (
+            // Loading state - show big white "Loading" text
+            <h2 className="loading-text-large">Loading</h2>
+          ) : (
+            // Default state - invitation to click
+            <>
+              <h2 className="welcome-text">This Week's Schedule</h2>
 
-            <div className="schedule-preview">
-              <p className="sunday-type">{getSundayType()}</p>
-              <p className="sunday-date">{scheduleData.date}</p>
-              <InlineTimeSelector
-                selectedTime={selectedStartTime}
-                onTimeChange={handleTimeChange}
-              />
-            </div>
-            <p className="welcome-subtitle">
-              Click here to view the full schedule
-            </p>
-          </>
+              <div className="schedule-preview">
+                <p className="sunday-type">{getSundayType()}</p>
+                <p className="sunday-date">{scheduleData.date}</p>
+                <InlineTimeSelector
+                  selectedTime={selectedStartTime}
+                  onTimeChange={handleTimeChange}
+                />
+              </div>
+              <p className="welcome-subtitle">
+                Click here to view the full schedule
+              </p>
+            </>
+          )
         ) : (
           // Clicked state - show full schedule
           <>

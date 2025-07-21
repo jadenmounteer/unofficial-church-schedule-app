@@ -14,7 +14,7 @@ function App(): React.JSX.Element {
       {/* Header */}
       <header className="app-header">
         <div className="header-content">
-          <h1 className="church-title">The Unofficial Church Schedule App</h1>
+          <h1 className="church-title">The Unofficial Sunday Schedule App</h1>
         </div>
       </header>
 

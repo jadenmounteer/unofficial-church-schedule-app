@@ -100,25 +100,24 @@ body {
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9), 0 0 20px rgba(255, 255, 255, 0.4),
     0 0 40px rgba(255, 255, 255, 0.2);
   letter-spacing: 0.05em;
-  animation: pulse-glow 2s ease-in-out infinite;
 }
 
-/* Loading container for combined spinner + text */
-.loading-container {
+/* Loading container for text + spinner */
+.loading-with-spinner {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.5rem;
+  gap: 2rem;
 }
 
-/* Enhanced loading spinner with glow effect */
-.loading-spinner-enhanced {
-  width: 50px;
-  height: 50px;
-  border: 4px solid rgba(255, 255, 255, 0.2);
+/* Enhanced loading spinner for blue background */
+.loading-spinner-blue {
+  width: 60px;
+  height: 60px;
+  border: 4px solid rgba(255, 255, 255, 0.3);
   border-top: 4px solid white;
   border-radius: 50%;
-  animation: spin-glow 1.2s linear infinite;
+  animation: spin 1s linear infinite;
   filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
 }
 
@@ -532,6 +531,15 @@ body {
     font-size: 2.8rem;
   }
 
+  .loading-spinner-blue {
+    width: 50px;
+    height: 50px;
+  }
+
+  .loading-with-spinner {
+    gap: 1.5rem;
+  }
+
   .welcome-subtitle {
     font-size: 1rem;
   }
@@ -586,6 +594,15 @@ body {
 
   .loading-text-large {
     font-size: 2.2rem;
+  }
+
+  .loading-spinner-blue {
+    width: 45px;
+    height: 45px;
+  }
+
+  .loading-with-spinner {
+    gap: 1.25rem;
   }
 
   .scene-overlay-3d {

@@ -188,8 +188,11 @@ function ChurchScene({
       >
         {!isClicked ? (
           !is3DModelLoaded ? (
-            // Loading state - show big white "Loading" text
-            <h2 className="loading-text-large">Loading</h2>
+            // Loading state with text + spinner
+            <div className="loading-with-spinner">
+              <h2 className="loading-text-large">Loading</h2>
+              <div className="loading-spinner-blue"></div>
+            </div>
           ) : (
             // Default state - invitation to click
             <>

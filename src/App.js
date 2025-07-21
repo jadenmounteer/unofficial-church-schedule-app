@@ -1,23 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { useState } from "react";
+import ChurchScene from "./ChurchScene";
 
 function App() {
+  const [sceneClicked, setSceneClicked] = useState(false);
+
+  const handleSceneClick = () => {
+    setSceneClicked((prev) => !prev);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+      {/* Header */}
+      <header className="app-header">
+        <div className="header-content">
+          <h1 className="church-title">The Unofficial Church Schedule App</h1>
+        </div>
       </header>
+
+      {/* 3D Scene - Full Page */}
+      <section className="hero-section">
+        <div className="scene-container">
+          <ChurchScene
+            onSceneClick={handleSceneClick}
+            isClicked={sceneClicked}
+          />
+        </div>
+      </section>
     </div>
   );
 }

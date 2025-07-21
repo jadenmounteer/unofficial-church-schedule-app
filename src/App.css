@@ -1,38 +1,436 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Crimson+Text:wght@400;600&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  background: linear-gradient(135deg, #f8f6f0 0%, #e8e3d8 100%);
+  color: #2d3748;
+  line-height: 1.6;
+}
+
 .App {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header Styles */
+.app-header {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(139, 69, 19, 0.1);
+  padding: 1.5rem 0;
+  position: relative;
+  z-index: 100;
+  box-shadow: 0 2px 20px rgba(139, 69, 19, 0.1);
+  flex-shrink: 0;
+}
+
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
+.church-title {
+  font-family: "Crimson Text", serif;
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: #8b4513;
+  text-shadow: 0 2px 4px rgba(139, 69, 19, 0.1);
+}
+
+/* Hero Section - Full Page 3D Scene */
+.hero-section {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  border-radius: 0;
+}
+
+.scene-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+/* 3D Scene Styles */
+.church-scene-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background: linear-gradient(135deg, #87ceeb 0%, #98d8e8 50%, #b0e0e6 100%);
+}
+
+.church-canvas {
+  width: 100% !important;
+  height: 100% !important;
+  cursor: grab;
+}
+
+.church-canvas:active {
+  cursor: grabbing;
+}
+
+/* 3D Scene Overlay */
+.scene-overlay-3d {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 2.5rem 3.5rem;
+  border-radius: 1.5rem;
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(139, 69, 19, 0.1);
+  box-shadow: 0 8px 32px rgba(139, 69, 19, 0.15);
+  transition: all 0.3s ease;
   pointer-events: none;
+  z-index: 10;
+  max-width: 90vw;
+  max-height: 85vh;
+  overflow-y: auto;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.scene-overlay-3d.expanded {
+  background: rgba(255, 255, 255, 0.98);
+  padding: 2rem;
+  min-width: 600px;
+  pointer-events: auto;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+.scene-overlay-3d:not(.expanded) {
+  pointer-events: auto;
+}
+
+.scene-overlay-3d:hover {
+  transform: translate(-50%, -50%) translateY(-2px);
+  box-shadow: 0 12px 40px rgba(139, 69, 19, 0.2);
+}
+
+.welcome-text {
+  font-family: "Crimson Text", serif;
+  font-size: 2.8rem;
+  color: #8b4513;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+}
+
+.welcome-subtitle {
+  color: #6b7280;
+  font-size: 1.2rem;
+  font-weight: 400;
+  margin-bottom: 1rem;
+}
+
+/* Schedule Preview (Initial State) */
+.schedule-preview {
+  margin-top: 1rem;
+}
+
+.sunday-type {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #8b4513;
+  margin-bottom: 0.5rem;
+}
+
+.sunday-date {
+  font-size: 1rem;
+  color: #6b7280;
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+}
+
+/* Inline Time Selector */
+.inline-time-selector {
+  display: inline-flex;
   align-items: center;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+  pointer-events: auto;
+}
+
+.time-label-inline {
+  font-size: 0.9rem;
+  color: #8b4513;
+  font-weight: 500;
+}
+
+.inline-time-dropdown {
+  background: rgba(139, 69, 19, 0.1);
+  border: 1px solid rgba(139, 69, 19, 0.3);
+  border-radius: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  color: #8b4513;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  outline: none;
+  appearance: none;
+  background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%238b4513" d="M2 0L0 2h4zm0 5L0 3h4z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 0.5rem center;
+  background-size: 0.65rem;
+  padding-right: 1.5rem;
+  vertical-align: baseline;
+}
+
+.inline-time-dropdown:hover {
+  background-color: rgba(139, 69, 19, 0.15);
+  border-color: rgba(139, 69, 19, 0.5);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(139, 69, 19, 0.2);
+}
+
+.inline-time-dropdown:focus {
+  border-color: #8b4513;
+  box-shadow: 0 0 0 2px rgba(139, 69, 19, 0.2);
+}
+
+/* Schedule Details (Expanded State) */
+.schedule-details {
+  text-align: left;
+  max-width: 100%;
+}
+
+.schedule-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid rgba(139, 69, 19, 0.1);
+}
+
+.schedule-header .sunday-date {
+  font-size: 1.2rem;
+  color: #8b4513;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.schedule-header .sunday-type {
+  font-size: 1rem;
+  color: #6b7280;
+  margin-bottom: 0.5rem;
+}
+
+.schedule-duration-container {
+  font-size: 0.9rem;
+  color: #8b4513;
+  font-weight: 500;
+  opacity: 0.8;
+  display: flex;
+  align-items: baseline;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  gap: 0;
+  flex-wrap: wrap;
+}
+
+.schedule-duration-container span {
+  white-space: nowrap;
+}
+
+/* Schedule List */
+.schedule-list {
+  space-y: 1rem;
+}
+
+.schedule-item {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba(139, 69, 19, 0.05);
+  border-radius: 0.75rem;
+  margin-bottom: 1rem;
+  border-left: 3px solid #8b4513;
+}
+
+.schedule-time {
+  min-width: 140px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #8b4513;
+  background: rgba(139, 69, 19, 0.1);
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  text-align: center;
+  height: fit-content;
+}
+
+.schedule-content {
+  flex: 1;
+}
+
+.schedule-activity {
+  font-family: "Crimson Text", serif;
+  font-size: 1.2rem;
+  color: #8b4513;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.schedule-description {
+  color: #6b7280;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+.age-group {
+  display: inline-block;
+  background: rgba(139, 69, 19, 0.15);
+  color: #8b4513;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.schedule-note {
+  font-size: 0.85rem;
+  color: #8b4513;
+  font-style: italic;
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background: rgba(139, 69, 19, 0.08);
+  border-radius: 0.5rem;
+}
+
+/* Close Button */
+.close-schedule {
+  width: 100%;
+  margin-top: 2rem;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #8b4513, #a0522d);
   color: white;
+  border: none;
+  border-radius: 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(139, 69, 19, 0.3);
 }
 
-.App-link {
-  color: #61dafb;
+.close-schedule:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(139, 69, 19, 0.4);
+  background: linear-gradient(135deg, #a0522d, #8b4513);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+/* Responsive Design */
+@media (max-width: 768px) {
+  .church-title {
+    font-size: 2rem;
   }
-  to {
-    transform: rotate(360deg);
+
+  .app-header {
+    padding: 1rem 0;
+  }
+
+  .welcome-text {
+    font-size: 2.2rem;
+  }
+
+  .welcome-subtitle {
+    font-size: 1rem;
+  }
+
+  .scene-overlay-3d {
+    padding: 1.75rem 2rem;
+    max-width: 90vw;
+    min-width: 85vw;
+  }
+
+  .scene-overlay-3d.expanded {
+    min-width: 98vw;
+    max-width: 98vw;
+    padding: 1.25rem;
+    max-height: 88vh;
+    margin: 0 1vw;
+  }
+
+  .header-content {
+    padding: 0 1rem;
+  }
+
+  .schedule-item {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .schedule-time {
+    min-width: auto;
+    width: 100%;
+  }
+
+  .schedule-duration-container {
+    flex-direction: column;
+    gap: 0.25rem;
+    align-items: center;
+  }
+
+  .inline-time-dropdown {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .church-title {
+    font-size: 1.6rem;
+  }
+
+  .welcome-text {
+    font-size: 1.8rem;
+  }
+
+  .scene-overlay-3d {
+    padding: 1.5rem 1.75rem;
+    max-width: 95vw;
+    min-width: 90vw;
+  }
+
+  .scene-overlay-3d.expanded {
+    padding: 0.75rem;
+    min-width: 100vw;
+    max-width: 100vw;
+    max-height: 95vh;
+    margin: 0;
+    border-radius: 1rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+  }
+
+  .schedule-item {
+    padding: 0.75rem;
+  }
+
+  .schedule-activity {
+    font-size: 1.1rem;
+  }
+
+  .inline-time-dropdown {
+    font-size: 0.8rem;
+    padding: 0.2rem 0.4rem;
+    padding-right: 1.2rem;
+  }
+
+  .welcome-text {
+    font-size: 1.6rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .schedule-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
   }
 }

@@ -29,7 +29,7 @@ function ChurchLandscape({
   isClicked,
   onModelLoaded,
 }: ChurchLandscapeProps & { onModelLoaded: () => void }): React.JSX.Element {
-  const { scene } = useGLTF("/assets/landscape.glb");
+  const { scene } = useGLTF("/assets/landscape.glb", true); // Enable Draco decompression
   const meshRef = useRef<Group>(null);
   const [hasNotifiedLoaded, setHasNotifiedLoaded] = useState(false);
 
@@ -269,6 +269,8 @@ function ChurchScene({
 }
 
 // Preload the GLB file for better performance
-useGLTF.preload("/assets/landscape.glb");
+// This 44MB Draco-compressed model will be cached by the browser after first load
+// Subsequent visits will load instantly from cache thanks to Firebase headers
+useGLTF.preload("/assets/landscape.glb", true); // Enable Draco decompression
 
 export default ChurchScene;

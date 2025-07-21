@@ -176,9 +176,7 @@ function ChurchScene({
           // Default state - invitation to click
           <>
             <h2 className="welcome-text">This Week's Schedule</h2>
-            <p className="welcome-subtitle">
-              Click here to view the full schedule
-            </p>
+
             <div className="schedule-preview">
               <p className="sunday-type">{getSundayType()}</p>
               <p className="sunday-date">{scheduleData.date}</p>
@@ -187,6 +185,9 @@ function ChurchScene({
                 onTimeChange={handleTimeChange}
               />
             </div>
+            <p className="welcome-subtitle">
+              Click here to view the full schedule
+            </p>
           </>
         ) : (
           // Clicked state - show full schedule

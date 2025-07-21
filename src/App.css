@@ -134,7 +134,6 @@ body {
   color: #6b7280;
   font-size: 1.2rem;
   font-weight: 400;
-  margin-bottom: 1rem;
 }
 
 /* Schedule Preview (Initial State) */
@@ -163,6 +162,7 @@ body {
   gap: 0.25rem;
   margin-top: 0.5rem;
   pointer-events: auto;
+  margin-bottom: 1rem;
 }
 
 .time-label-inline {

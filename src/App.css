@@ -327,6 +327,40 @@ body {
   background: linear-gradient(135deg, #a0522d, #8b4513);
 }
 
+/* Source Link Styling */
+.source-link-container {
+  margin-top: 0.75rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(139, 69, 19, 0.2);
+}
+
+.source-link {
+  color: #8b4513;
+  text-decoration: none;
+  font-size: 0.875rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: color 0.2s ease;
+}
+
+.source-link:hover {
+  color: #a0522d;
+  text-decoration: underline;
+}
+
+.source-link:visited {
+  color: #8b4513;
+}
+
+.disclaimer-text {
+  margin: 0.5rem 0 0 0;
+  color: rgba(107, 114, 128, 0.8);
+  font-size: 0.8rem;
+  line-height: 1.4;
+  font-style: italic;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .church-title {
@@ -432,5 +466,9 @@ body {
   .schedule-header {
     margin-bottom: 1.5rem;
     padding-bottom: 0.75rem;
+  }
+
+  .source-link {
+    font-size: 0.8rem;
   }
 }

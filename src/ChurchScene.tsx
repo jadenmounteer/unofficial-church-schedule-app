@@ -203,6 +203,21 @@ function ChurchScene({
                     onTimeChange={handleTimeChange}
                   />
                 </div>
+                <div className="source-link-container">
+                  <a
+                    href="https://www.churchofjesuschrist.org/study/manual/general-handbook/29-meetings-in-the-church?lang=eng"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="source-link"
+                  >
+                    📖 Official Church Handbook Source
+                  </a>
+                  <p className="disclaimer-text">
+                    This is an unofficial site. The correct information can be
+                    seen in the General Handbook of The Church of Jesus Christ
+                    of Latter-day Saints.
+                  </p>
+                </div>
               </div>
 
               <div className="schedule-list">

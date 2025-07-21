@@ -1,10 +1,48 @@
 // Church Schedule Service
 // Based on the church handbook for Sunday meeting schedules
 
+export interface ScheduleItem {
+  duration: string;
+  activity: string;
+  description: string;
+  time: string;
+  ageGroup?: string;
+  note?: string;
+}
+
+export interface SundaySchedule {
+  date: string;
+  sundayOfMonth: number;
+  schedule: ScheduleItem[];
+  totalDuration: string;
+  startTime: string;
+}
+
+export type SundayType =
+  | "Sunday School Sunday"
+  | "Priesthood & Auxiliary Sunday"
+  | "Fifth Sunday Combined Meeting"
+  | "Regular Sunday";
+
+export type StartTime =
+  | "8:00 AM"
+  | "9:00 AM"
+  | "10:00 AM"
+  | "11:00 AM"
+  | "12:00 PM"
+  | "1:00 PM"
+  | "2:00 PM";
+
+interface MeetingTimes {
+  sacrament: string;
+  transition: string;
+  secondBlock: string;
+}
+
 /**
  * Gets the current date or a specified date
  */
-function getTargetDate(date = null) {
+function getTargetDate(date: Date | null = null): Date {
   return date ? new Date(date) : new Date();
 }
 
@@ -12,7 +50,7 @@ function getTargetDate(date = null) {
  * Determines which Sunday of the month a given date is
  * Returns 1-5 depending on which Sunday it is
  */
-function getSundayOfMonth(date = null) {
+function getSundayOfMonth(date: Date | null = null): number {
   const targetDate = getTargetDate(date);
 
   // If it's not Sunday, find the next Sunday
@@ -42,7 +80,7 @@ function getSundayOfMonth(date = null) {
 /**
  * Gets the next Sunday from today
  */
-function getNextSunday() {
+function getNextSunday(): Date {
   const today = new Date();
   const daysUntilSunday = (7 - today.getDay()) % 7;
   const nextSunday = new Date(today);
@@ -53,7 +91,7 @@ function getNextSunday() {
 /**
  * Formats a date to a readable string
  */
-function formatDate(date) {
+function formatDate(date: Date): string {
   return date.toLocaleDateString("en-US", {
     weekday: "long",
     year: "numeric",
@@ -65,7 +103,7 @@ function formatDate(date) {
 /**
  * Formats time from 24-hour format to 12-hour format with AM/PM
  */
-function formatTime(hour, minute = 0) {
+function formatTime(hour: number, minute: number = 0): string {
   const date = new Date();
   date.setHours(hour, minute, 0, 0);
   return date.toLocaleTimeString("en-US", {
@@ -78,24 +116,24 @@ function formatTime(hour, minute = 0) {
 /**
  * Converts time string like "1:00 PM" to 24-hour format hour (13)
  */
-function parseTimeStringToHour(timeString) {
+function parseTimeStringToHour(timeString: string): number {
   const [time, period] = timeString.split(" ");
   let [hours] = time.split(":");
-  hours = parseInt(hours);
+  let hourNumber = parseInt(hours);
 
-  if (period === "PM" && hours !== 12) {
-    hours += 12;
-  } else if (period === "AM" && hours === 12) {
-    hours = 0;
+  if (period === "PM" && hourNumber !== 12) {
+    hourNumber += 12;
+  } else if (period === "AM" && hourNumber === 12) {
+    hourNumber = 0;
   }
 
-  return hours;
+  return hourNumber;
 }
 
 /**
  * Calculates meeting times based on start time
  */
-function calculateMeetingTimes(startHour = 9) {
+function calculateMeetingTimes(startHour: number = 9): MeetingTimes {
   // Sacrament Meeting: 60 minutes
   const sacramentStart = formatTime(startHour);
   const sacramentEnd = formatTime(startHour + 1);
@@ -118,7 +156,10 @@ function calculateMeetingTimes(startHour = 9) {
 /**
  * Gets the complete Sunday schedule based on which Sunday of the month it is
  */
-function getSundaySchedule(date = null, startTime = "9:00 AM") {
+export function getSundaySchedule(
+  date: Date | null = null,
+  startTime: StartTime = "9:00 AM"
+): SundaySchedule {
   const targetSunday = date ? new Date(date) : getNextSunday();
   const sundayNumber = getSundayOfMonth(targetSunday);
 
@@ -127,7 +168,7 @@ function getSundaySchedule(date = null, startTime = "9:00 AM") {
   const times = calculateMeetingTimes(startHour);
 
   // Base schedule that's always the same
-  const baseSchedule = [
+  const baseSchedule: ScheduleItem[] = [
     {
       duration: "60 minutes",
       activity: "Sacrament Meeting",
@@ -143,7 +184,7 @@ function getSundaySchedule(date = null, startTime = "9:00 AM") {
   ];
 
   // Variable schedule based on Sunday of the month
-  let variableSchedule = [];
+  let variableSchedule: ScheduleItem[] = [];
 
   if (sundayNumber === 1 || sundayNumber === 3) {
     // First and third Sundays: Sunday School
@@ -229,7 +270,7 @@ function getSundaySchedule(date = null, startTime = "9:00 AM") {
 /**
  * Gets a simple description of what type of Sunday it is
  */
-function getSundayType(date = null) {
+export function getSundayType(date: Date | null = null): SundayType {
   const sundayNumber = getSundayOfMonth(date);
 
   if (sundayNumber === 1 || sundayNumber === 3) {
@@ -246,7 +287,7 @@ function getSundayType(date = null) {
 /**
  * Gets common church start times
  */
-function getCommonStartTimes() {
+export function getCommonStartTimes(): StartTime[] {
   return [
     "8:00 AM",
     "9:00 AM",
@@ -258,11 +299,4 @@ function getCommonStartTimes() {
   ];
 }
 
-export {
-  getSundaySchedule,
-  getSundayType,
-  getSundayOfMonth,
-  getNextSunday,
-  formatDate,
-  getCommonStartTimes,
-};
+export { getSundayOfMonth, getNextSunday, formatDate };

@@ -1,16 +1,35 @@
 import React, { Suspense, useRef, useState, useEffect } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useGLTF, OrbitControls, Environment } from "@react-three/drei";
+import { Group } from "three";
 import {
   getSundaySchedule,
   getSundayType,
   getCommonStartTimes,
+  SundaySchedule,
+  StartTime,
 } from "./scheduleService";
 
+interface ChurchLandscapeProps {
+  isClicked: boolean;
+}
+
+interface InlineTimeSelectorProps {
+  selectedTime: StartTime;
+  onTimeChange: (time: StartTime) => void;
+}
+
+interface ChurchSceneProps {
+  onSceneClick: () => void;
+  isClicked: boolean;
+}
+
 // Component to load and display the church landscape
-function ChurchLandscape({ isClicked }) {
+function ChurchLandscape({
+  isClicked,
+}: ChurchLandscapeProps): React.JSX.Element {
   const { scene } = useGLTF("/assets/landscape.glb");
-  const meshRef = useRef();
+  const meshRef = useRef<Group>(null);
 
   // Gentle rotation animation - continues even when overlay is expanded
   useFrame((state) => {
@@ -26,17 +45,28 @@ function ChurchLandscape({ isClicked }) {
 }
 
 // Inline Time Selector Component
-function InlineTimeSelector({ selectedTime, onTimeChange }) {
+function InlineTimeSelector({
+  selectedTime,
+  onTimeChange,
+}: InlineTimeSelectorProps): React.JSX.Element {
   const startTimes = getCommonStartTimes();
+
+  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    onTimeChange(event.target.value as StartTime);
+  };
+
+  const handleClick = (event: React.MouseEvent<HTMLSelectElement>) => {
+    event.stopPropagation(); // Prevent triggering the overlay click
+  };
 
   return (
     <div className="inline-time-selector">
       <span className="time-label-inline">Starting at </span>
       <select
         value={selectedTime}
-        onChange={(e) => onTimeChange(e.target.value)}
+        onChange={handleChange}
         className="inline-time-dropdown"
-        onClick={(e) => e.stopPropagation()} // Prevent triggering the overlay click
+        onClick={handleClick}
       >
         {startTimes.map((time) => (
           <option key={time} value={time}>
@@ -49,15 +79,22 @@ function InlineTimeSelector({ selectedTime, onTimeChange }) {
 }
 
 // Main 3D Scene Component
-function ChurchScene({ onSceneClick, isClicked }) {
-  const [scheduleData, setScheduleData] = useState(null);
-  const [selectedStartTime, setSelectedStartTime] = useState("9:00 AM");
+function ChurchScene({
+  onSceneClick,
+  isClicked,
+}: ChurchSceneProps): React.JSX.Element {
+  const [scheduleData, setScheduleData] = useState<SundaySchedule | null>(null);
+  const [selectedStartTime, setSelectedStartTime] =
+    useState<StartTime>("9:00 AM");
 
   // Load saved start time from localStorage on mount
   useEffect(() => {
     const savedStartTime = localStorage.getItem("churchStartTime");
-    if (savedStartTime) {
-      setSelectedStartTime(savedStartTime);
+    if (
+      savedStartTime &&
+      getCommonStartTimes().includes(savedStartTime as StartTime)
+    ) {
+      setSelectedStartTime(savedStartTime as StartTime);
     }
   }, []);
 
@@ -68,9 +105,22 @@ function ChurchScene({ onSceneClick, isClicked }) {
   }, [selectedStartTime]);
 
   // Save start time to localStorage when it changes
-  const handleTimeChange = (newTime) => {
+  const handleTimeChange = (newTime: StartTime): void => {
     setSelectedStartTime(newTime);
     localStorage.setItem("churchStartTime", newTime);
+  };
+
+  const handleOverlayClick = (): void => {
+    if (!isClicked) {
+      onSceneClick();
+    }
+  };
+
+  const handleCloseClick = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ): void => {
+    event.stopPropagation();
+    onSceneClick();
   };
 
   if (!scheduleData) {
@@ -119,7 +169,7 @@ function ChurchScene({ onSceneClick, isClicked }) {
       {/* Scene Overlay */}
       <div
         className={`scene-overlay-3d ${isClicked ? "expanded" : ""}`}
-        onClick={!isClicked ? onSceneClick : undefined}
+        onClick={handleOverlayClick}
         style={{ cursor: !isClicked ? "pointer" : "default" }}
       >
         {!isClicked ? (
@@ -173,13 +223,7 @@ function ChurchScene({ onSceneClick, isClicked }) {
                 ))}
               </div>
 
-              <button
-                className="close-schedule"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onSceneClick();
-                }}
-              >
+              <button className="close-schedule" onClick={handleCloseClick}>
                 ← Back
               </button>
             </div>

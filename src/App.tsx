@@ -1,11 +1,11 @@
+import React, { useState } from "react";
 import "./App.css";
-import { useState } from "react";
 import ChurchScene from "./ChurchScene";
 
-function App() {
-  const [sceneClicked, setSceneClicked] = useState(false);
+function App(): React.JSX.Element {
+  const [sceneClicked, setSceneClicked] = useState<boolean>(false);
 
-  const handleSceneClick = () => {
+  const handleSceneClick = (): void => {
     setSceneClicked((prev) => !prev);
   };
 

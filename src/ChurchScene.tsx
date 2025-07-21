@@ -6,7 +6,6 @@ import {
   getSundaySchedule,
   getSundayType,
   getCommonStartTimes,
-  SundaySchedule,
   StartTime,
 } from "./scheduleService";
 
@@ -179,7 +178,9 @@ function ChurchScene({
 
       {/* Scene Overlay */}
       <div
-        className={`scene-overlay-3d ${isClicked ? "expanded" : ""}`}
+        className={`scene-overlay-3d ${isClicked ? "expanded" : ""} ${
+          !is3DModelLoaded ? "loading" : ""
+        }`}
         onClick={handleOverlayClick}
         style={{
           cursor: !isClicked ? "pointer" : "default",

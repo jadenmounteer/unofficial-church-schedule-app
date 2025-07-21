@@ -97,7 +97,8 @@ body {
   font-weight: 600;
   margin: 0;
   text-align: center;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9), 0 0 20px rgba(255, 255, 255, 0.4),
+    0 0 40px rgba(255, 255, 255, 0.2);
   letter-spacing: 0.05em;
   animation: pulse-glow 2s ease-in-out infinite;
 }
@@ -256,11 +257,11 @@ body {
   pointer-events: auto;
 }
 
-.scene-overlay-3d:not(.expanded) {
+.scene-overlay-3d:not(.expanded):not(.loading) {
   pointer-events: auto;
 }
 
-.scene-overlay-3d:hover {
+.scene-overlay-3d:not(.loading):hover {
   transform: translate(-50%, -50%) translateY(-2px);
   box-shadow: 0 12px 40px rgba(139, 69, 19, 0.2);
 }
@@ -651,4 +652,13 @@ body {
     position: sticky;
     bottom: env(safe-area-inset-bottom);
   }
+}
+
+/* Transparent overlay during loading - no white background */
+.scene-overlay-3d.loading {
+  background: transparent;
+  backdrop-filter: none;
+  border: none;
+  box-shadow: none;
+  padding: 0;
 }
